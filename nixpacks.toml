@@ -1,8 +1,11 @@
 [phases.setup]
-nixPkgs = ["python311", "python311Packages.pip", "python311Packages.flask", "python311Packages.gunicorn"]
+nixPkgs = ["python311"]
 
 [phases.install]
-cmds = ["pip install gspread oauth2client --break-system-packages"]
+cmds = [
+  "python3.11 -m ensurepip",
+  "python3.11 -m pip install flask gspread oauth2client gunicorn --break-system-packages"
+]
 
 [start]
-cmd = "python3 -m gunicorn --bind 0.0.0.0:$PORT app:app"
+cmd = "python3.11 -m gunicorn --bind 0.0.0.0:$PORT app:app"
