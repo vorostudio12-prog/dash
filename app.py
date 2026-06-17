@@ -8,11 +8,13 @@ app = Flask(__name__)
 # Google Sheets setup
 import os
 import json
+from google.oauth2.service_account import Credentials
+import gspread
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds_json = json.loads(os.environ.get("GOOGLE_CREDENTIALS"))
-creds_json[""] = creds_json["private_key"].replace("\\n", "\n")
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
+creds_json["private_key"] = creds_json["private_key"].replace("\\n", "\n")
+creds = Credentials.from_service_account_info(creds_json, scopes=scope)
 client = gspread.authorize(creds)
 sheet = client.open("Dental Bot")
 bookings_sheet = sheet.worksheet("Bookings")
