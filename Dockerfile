@@ -10,4 +10,4 @@ COPY . .
 EXPOSE 8080
 
 # Wrap the command in sh -c so $PORT evaluates correctly
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:$PORT app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
