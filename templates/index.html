@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dental Clinic Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #181c27;
+      --border: #252a38;
+      --text: #e8eaf0;
+      --muted: #6b7280;
+      --teal: #2dd4bf;
+      --teal-dim: rgba(45,212,191,0.12);
+      --red: #f87171;
+      --red-dim: rgba(248,113,113,0.12);
+      --amber: #fbbf24;
+      --amber-dim: rgba(251,191,36,0.12);
+      --green: #4ade80;
+      --green-dim: rgba(74,222,128,0.12);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--teal-dim);
+      border: 1px solid var(--teal);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--text);
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--teal);
+      background: var(--teal-dim);
+      border: 1px solid rgba(45,212,191,0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--teal);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 700px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      header { padding: 16px; }
+      main { padding: 20px 16px; }
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .stat-value.teal { color: var(--teal); }
+    .stat-value.green { color: var(--green); }
+    .stat-value.red { color: var(--red); }
+    .stat-value.amber { color: var(--amber); }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+    }
+
+    .refresh-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .refresh-btn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 7px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: var(--teal-dim);
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .bookings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .booking-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .booking-card:hover { border-color: #353a4a; }
+
+    .booking-card.done { border-left: 3px solid var(--green); }
+    .booking-card.missed { border-left: 3px solid var(--red); }
+    .booking-card.pending { border-left: 3px solid var(--amber); }
+
+    .booking-info { flex: 1; min-width: 0; }
+
+    .booking-name {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .booking-meta {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .booking-price {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--teal);
+      white-space: nowrap;
+    }
+
+    .booking-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .action-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+
+    .btn-done {
+      background: var(--green-dim);
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .btn-done:hover { background: rgba(74,222,128,0.22); }
+
+    .btn-missed {
+      background: var(--red-dim);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .btn-missed:hover { background: rgba(248,113,113,0.22); }
+
+    .status-badge {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-done { background: var(--green-dim); color: var(--green); }
+    .badge-missed { background: var(--red-dim); color: var(--red); }
+    .badge-pending { background: var(--amber-dim); color: var(--amber); }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    .empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--teal);
+      color: var(--teal);
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🦷</div>
+    <div>
+      <div class="logo-text">Demo Dental Clinic</div>
+      <div class="logo-sub">Doctor Dashboard</div>
+    </div>
+  </div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    Live
+  </div>
+</header>
+
+<main>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Revenue</div>
+      <div class="stat-value teal" id="total-revenue">₹0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Completed</div>
+      <div class="stat-value green" id="done-count">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Missed</div>
+      <div class="stat-value red" id="missed-count">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Pending</div>
+      <div class="stat-value amber" id="pending-count">0</div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-title">Appointments</div>
+    <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="tab active" onclick="filterBookings('All', this)">All</button>
+    <button class="tab" onclick="filterBookings('Pending', this)">Pending</button>
+    <button class="tab" onclick="filterBookings('Done', this)">Done</button>
+    <button class="tab" onclick="filterBookings('Missed', this)">Missed</button>
+  </div>
+
+  <div class="bookings-list" id="bookings-list">
+    <div class="empty-state">
+      <div class="empty-icon">🦷</div>
+      <div>Loading appointments...</div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let allBookings = [];
+  let currentFilter = 'All';
+
+  async function loadAll() {
+    await Promise.all([loadBookings(), loadRevenue()]);
+  }
+
+  async function loadRevenue() {
+    const res = await fetch('/api/revenue');
+    const data = await res.json();
+    document.getElementById('total-revenue').textContent = '₹' + data.total_revenue.toLocaleString('en-IN');
+    document.getElementById('done-count').textContent = data.done;
+    document.getElementById('missed-count').textContent = data.missed;
+    document.getElementById('pending-count').textContent = data.pending;
+  }
+
+  async function loadBookings() {
+    const res = await fetch('/api/bookings');
+    allBookings = await res.json();
+    renderBookings();
+  }
+
+  function filterBookings(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderBookings();
+  }
+
+  function renderBookings() {
+    const list = document.getElementById('bookings-list');
+    const filtered = currentFilter === 'All'
+      ? allBookings
+      : allBookings.filter(b => b.Status === currentFilter);
+
+    if (filtered.length === 0) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div>No ${currentFilter.toLowerCase()} appointments</div></div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map((b, i) => {
+      const realIndex = allBookings.indexOf(b);
+      const status = b.Status || 'Pending';
+      const statusClass = status.toLowerCase();
+
+      const actions = status === 'Pending'
+        ? `<div class="booking-actions">
+            <button class="action-btn btn-done" onclick="updateStatus(${realIndex}, 'Done')">✓ Done</button>
+            <button class="action-btn btn-missed" onclick="updateStatus(${realIndex}, 'Missed')">✗ Missed</button>
+           </div>`
+        : `<span class="status-badge badge-${statusClass}">${status}</span>`;
+
+      return `
+        <div class="booking-card ${statusClass}" id="card-${realIndex}">
+          <div class="booking-info">
+            <div class="booking-name">${b.Name || 'Unknown'}</div>
+            <div class="booking-meta">
+              <span>🔧 ${b.Service || 'N/A'}</span>
+              <span>📅 ${b.Date || 'N/A'}</span>
+              <span>⏰ ${b.Time || 'N/A'}</span>
+            </div>
+          </div>
+          <div class="booking-price">₹${b.Price || 0}</div>
+          ${actions}
+        </div>`;
+    }).join('');
+  }
+
+  async function updateStatus(index, status) {
+    const res = await fetch('/api/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ row: index, status })
+    });
+
+    if (res.ok) {
+      allBookings[index].Status = status;
+      renderBookings();
+      await loadRevenue();
+      showToast(status === 'Done' ? '✓ Marked as done' : '✗ Marked as missed');
+    }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  loadAll();
+  setInterval(loadAll, 30000);
+</script>
+</body>
+</html>
