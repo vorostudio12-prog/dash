@@ -11,6 +11,7 @@ import json
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds_json = json.loads(os.environ.get("GOOGLE_CREDENTIALS"))
+creds_json[""] = creds_json["private_key"].replace("\\n", "\n")
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
 client = gspread.authorize(creds)
 sheet = client.open("Dental Bot")
